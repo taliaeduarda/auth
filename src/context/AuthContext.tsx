@@ -29,7 +29,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const [user, setUser] = useState<User>({} as User);
   const isAuthenticated = !!user;
-
+  // useeffect p/ atualizar as info do usuário depois do refresh
   useEffect(() => {
     const { "nextauth.token": token } = parseCookies();
 
@@ -71,6 +71,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         permissions,
         roles,
       });
+
+      // atulizar o bearer antes de redirecionar
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       router.push("/dashboard");
     } catch (err) {
